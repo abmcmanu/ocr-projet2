@@ -34,7 +34,7 @@ public class StudentControllerTest {
     private static final String EMAIL = "marie.curie@example.com";
 
     @Container
-    static MySQLContainer<?> mySQLContainer = new MySQLContainer<>("mysql:latest");
+    static MySQLContainer<?> mySQLContainer = new MySQLContainer<>("mysql:8.0.33");
 
     @Autowired
     private StudentRepository studentRepository;

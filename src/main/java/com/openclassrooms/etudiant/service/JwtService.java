@@ -19,13 +19,39 @@ public class JwtService {
     private long expirationMs;
 
     public String generateToken(UserDetails userDetails) {
-        SecretKey key = Keys.hmacShaKeyFor(secret.getBytes());
         return Jwts.builder()
                 .subject(userDetails.getUsername())
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + expirationMs))
-                .signWith(key)
+                .signWith(buildKey())
                 .compact();
     }
 
+    public String extractUsername(String token) {
+        return Jwts.parser()
+                .verifyWith(buildKey())
+                .build()
+                .parseSignedClaims(token)
+                .getPayload()
+                .getSubject();
+    }
+
+    public boolean validateToken(String token, UserDetails userDetails) {
+        String username = extractUsername(token);
+        return username.equals(userDetails.getUsername()) && !isTokenExpired(token);
+    }
+
+    private boolean isTokenExpired(String token) {
+        Date expiration = Jwts.parser()
+                .verifyWith(buildKey())
+                .build()
+                .parseSignedClaims(token)
+                .getPayload()
+                .getExpiration();
+        return expiration.before(new Date());
+    }
+
+    private SecretKey buildKey() {
+        return Keys.hmacShaKeyFor(secret.getBytes());
+    }
 }

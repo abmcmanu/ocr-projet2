@@ -54,8 +54,23 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     protected ResponseEntity<Object> handleDataIntegrityViolation(DataIntegrityViolationException exception,
                                                                   WebRequest request) {
         logError(exception);
-        return handleExceptionInternal(exception, getErrorDetails(exception, request), new HttpHeaders(),
-                HttpStatus.CONFLICT, request);
+        String friendlyMessage = resolveDuplicateMessage(exception);
+        ErrorDetails errorDetails = new ErrorDetails(LocalDateTime.now(), friendlyMessage, request.getDescription(false));
+        return handleExceptionInternal(exception, errorDetails, new HttpHeaders(), HttpStatus.CONFLICT, request);
+    }
+
+    private String resolveDuplicateMessage(DataIntegrityViolationException exception) {
+        String msg = exception.getMessage() != null ? exception.getMessage().toLowerCase() : "";
+        if (msg.contains("duplicate entry")) {
+            if (msg.contains("email")) {
+                return "Un étudiant avec cet email existe déjà.";
+            }
+            if (msg.contains("login")) {
+                return "Ce nom d'utilisateur est déjà utilisé.";
+            }
+            return "Cette valeur existe déjà.";
+        }
+        return "Violation de contrainte d'intégrité.";
     }
 
     @Override

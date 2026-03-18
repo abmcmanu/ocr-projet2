@@ -157,12 +157,21 @@
 						</exclude>
 					</excludes>
 				</configuration>
-
 			</plugin>
-		<plugin>
+			<plugin>
 				<groupId>org.jacoco</groupId>
 				<artifactId>jacoco-maven-plugin</artifactId>
 				<version>0.8.13</version>
+				<configuration>
+					<!-- Exclure le code généré (Lombok/MapStruct) et les classes sans logique métier -->
+					<excludes>
+						<exclude>**/dto/**</exclude>
+						<exclude>**/entities/**</exclude>
+						<exclude>**/mapper/**</exclude>
+						<exclude>**/EtudiantBackendApplication.class</exclude>
+						<exclude>**/handler/ErrorDetails.class</exclude>
+					</excludes>
+				</configuration>
 				<executions>
 					<execution>
 						<goals><goal>prepare-agent</goal></goals>
@@ -174,6 +183,7 @@
 					</execution>
 					<execution>
 						<id>check</id>
+						<phase>test</phase>
 						<goals><goal>check</goal></goals>
 						<configuration>
 							<rules>

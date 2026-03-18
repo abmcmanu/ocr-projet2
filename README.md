@@ -118,14 +118,12 @@ mvn clean test
 ## Fonctionnalités portées
 
     - API de création d'un utilisateur (agent de la bibliothèque)
-    - API d'authentification d'un utilisateur (à faire)
-    - APIs CRUD des étudiants de la bibliothèque (à faire)
+    - API d'authentification d'un utilisateur 
+    - APIs CRUD des étudiants de la bibliothèque
 
 
 ## Écrans ou blocs concernés
-    - Ecran xxx
-    - Ecran xxx
-    - Ecran xxx
-
+    - Ecran login
+    - Ecran gestion des etudiants de la bibliothèque
 
 
